@@ -4,6 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///market.db"
+app.config["SECRET_KEY"] = "ee6ecc99982738018394de26"
 
 db = SQLAlchemy(app)
 
