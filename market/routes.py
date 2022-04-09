@@ -1,10 +1,12 @@
 from crypt import methods
+from nis import cat
 from requests import request
 from market import app
 from flask import flash, redirect, render_template, url_for
 from market.model import Item, User
 from market import db
-from market.forms import RegisterForm
+from market.forms import LoginForm, RegisterForm
+from flask_login import login_user
 
 
 @app.route("/")
@@ -38,6 +40,26 @@ def register_page():
             flash(f"Error creating a user : {err_msg}", category="danger")
 
     return render_template("register.html", form=form)
+
+
+@app.route("/login", methods=["GET", "POST"])
+def login_page():
+    form = LoginForm()
+    if form.validate_on_submit():
+        attempted_user = User.query.filter_by(username=form.username.data).first()
+        if attempted_user and attempted_user.check_password(
+            attempted_password=form.password1.data
+        ):
+            login_user(attempted_user)
+            flash(
+                f"Success! Logged in as {attempted_user.username}", category="success"
+            )
+            return redirect(url_for("product_page"))
+
+        else:
+            flash("Username and password donot match!!", category="danger")
+
+    return render_template("login.html", form=form)
 
 
 # @app.route("/add", methods=["GET", "POST"])
