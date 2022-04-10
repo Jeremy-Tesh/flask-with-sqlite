@@ -6,7 +6,7 @@ from flask import flash, redirect, render_template, url_for
 from market.model import Item, User
 from market import db
 from market.forms import LoginForm, RegisterForm
-from flask_login import login_user
+from flask_login import login_user, logout_user
 
 
 @app.route("/")
@@ -60,6 +60,13 @@ def login_page():
             flash("Username and password donot match!!", category="danger")
 
     return render_template("login.html", form=form)
+
+
+@app.route("/logout")
+def logout_page():
+    logout_user()
+    flash("You have been logged out", category="info")
+    return redirect(url_for("home_page"))
 
 
 # @app.route("/add", methods=["GET", "POST"])
